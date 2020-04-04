@@ -1,5 +1,5 @@
-import { h, Component, ComponentChild } from "preact";
-import * as style from "./style.css";
+import * as React from 'react';
+import "./style.css";
 import { NumPad } from "../numpad/numpad";
 
 export type CellValue = number | undefined;
@@ -41,7 +41,7 @@ function fromString(str: string): Cell[][] {
     return cells;
 }
 
-export class Sudoku extends Component<{}, SudokuState> {
+export class Sudoku extends React.Component<{}, SudokuState> {
     private sudokuHelper?: SudokuHelper;
 
     constructor(props: any, context: any) {
@@ -66,7 +66,7 @@ export class Sudoku extends Component<{}, SudokuState> {
             focus: [-1,-1]
         };
 
-        import("wasm-game-of-life").then(module => {
+        import("sudoku-generator").then(module => {
             this.sudokuHelper = module;
 
             this.generateSudoku();
@@ -235,13 +235,13 @@ export class Sudoku extends Component<{}, SudokuState> {
         }
     }
 
-    render(): ComponentChild {
+    render() {
         let [xFocus, yFocus] = this.state.focus;
 
-        return <div className={style.sudoku}>
+        return <div className="sudoku">
             <table>
                 {this.state.cells.map((row, x) =>
-                    <tr className={style.sudokuRow}>
+                    <tr className="sudoku-row">
                         {row.map((cell, y) => this.renderCell(cell, x, y))}
                     </tr>
                 )}
@@ -253,24 +253,24 @@ export class Sudoku extends Component<{}, SudokuState> {
         </div>;
     }
 
-    renderCell(cell: Cell, x: number, y: number): ComponentChild {
+    renderCell(cell: Cell, x: number, y: number) {
         let [xFocus, yFocus] = this.state.focus;
 
-        const focused = xFocus == x && yFocus == y ? style.focus : '';
-        const wrong = cell.wrong ? style.wrong : '';
-        const set = !cell.wrong && cell.editable ? style.set : '';
-        const classes = `${style.cell} ${focused} ${wrong} ${set}`
+        const focused = xFocus == x && yFocus == y ? 'focus' : '';
+        const wrong = cell.wrong ? 'wrong' : '';
+        const set = !cell.wrong && cell.editable ? 'set' : '';
+        const classes = `cell ${focused} ${wrong} ${set}`
 
         let content;
         if (cell.value) {
             content = cell.value;
         } else {
-            content = <span className={style.note}>{cell.notes.join('')}</span>
+            content = <span className="note">{cell.notes.join('')}</span>
         }
 
         return <td className={classes}
             onClick={() => this.focus(x,y)}
-            onKeyPress={event => this.handleKeyPress(event)}>
+            onKeyPress={event => this.handleKeyPress(event.nativeEvent)}>
                 {content}
         </td>;
     }

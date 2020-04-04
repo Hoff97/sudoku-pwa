@@ -1,0 +1,22 @@
+td.numpad-cell {
+    width: 9vw;
+    height: 9vw;
+    border: 1px solid black;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    font-size: 8vw;
+    cursor: pointer;
+}
+
+@media screen and (min-width: 500px) {
+    td.numpad-cell {
+        width: 45px;
+        height: 45px;
+        font-size: 42px;
+    }
+}
+
+table {
+    border-collapse: collapse;
+}

@@ -1,5 +1,5 @@
-import { h, Component, ComponentChild } from "preact";
-import * as style from "./style.css";
+import * as React from 'react';
+import "./style.css";
 import { CellValue } from "../sudoku/sudoku";
 
 const nums = [1,2,3,4,5,6,7,8,9,undefined];
@@ -9,14 +9,14 @@ interface NumPadProps {
     emitNote(num: number): void;
 }
 
-export class NumPad extends Component<NumPadProps, {}> {
+export class NumPad extends React.Component<NumPadProps, {}> {
     private buttonPressTimer?: any;
 
     constructor(props: any, context: any) {
         super(props, context);
     }
 
-    render(): ComponentChild {
+    render() {
         return <div>
             <table>
                 <tr>
@@ -44,8 +44,8 @@ export class NumPad extends Component<NumPadProps, {}> {
         }
     }
 
-    renderButton(cell: CellValue): ComponentChild {
-        return <td className={style.cell}
+    renderButton(cell: CellValue) {
+        return <td className="numpad-cell"
                     onTouchStart={() => this.handleButtonPress(cell)}
                     onTouchEnd={() => this.handleButtonRelease(cell)}
                     onMouseDown={() => this.handleButtonPress(cell)}
