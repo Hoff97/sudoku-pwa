@@ -12,6 +12,10 @@
     color: #D00;
 }
 
+.set {
+    color: #00A;
+}
+
 table {
     border-collapse: collapse;
 }
@@ -40,4 +44,8 @@ div.sudoku {
     margin: auto;
     width: max-content;
     margin-top: 20px;
+}
+
+span.note {
+    font-size: 12px;
 }
