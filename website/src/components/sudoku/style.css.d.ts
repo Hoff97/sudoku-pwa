@@ -2,6 +2,7 @@
 export const cell: string;
 export const wrong: string;
 export const set: string;
+export const sudokuRow: string;
 export const focus: string;
 export const sudoku: string;
 export const note: string;

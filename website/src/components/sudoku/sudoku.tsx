@@ -1,5 +1,6 @@
 import { h, Component, ComponentChild } from "preact";
 import * as style from "./style.css";
+import { NumPad } from "../numpad/numpad";
 
 import("wasm-game-of-life").then(module => {
     const sudoku = module.generate_sudoku();
@@ -8,7 +9,7 @@ import("wasm-game-of-life").then(module => {
     console.log(sol);
 });
 
-type CellValue = number | undefined;
+export type CellValue = number | undefined;
 
 interface Cell {
     value: CellValue;
@@ -248,12 +249,15 @@ export class Sudoku extends Component<{}, SudokuState> {
         return <div className={style.sudoku}>
             <table>
                 {this.state.cells.map((row, x) =>
-                    <tr>
+                    <tr className={style.sudokuRow}>
                         {row.map((cell, y) => this.renderCell(cell, x, y))}
                     </tr>
                 )}
             </table>
             <button onClick={() => this.generateSudoku()}>Generate new sudoku</button>
+            <NumPad
+                emitClick={value => this.setCell(xFocus, yFocus, value)}
+                emitNote={value => this.setNote(xFocus, yFocus, value)}/>
         </div>;
     }
 

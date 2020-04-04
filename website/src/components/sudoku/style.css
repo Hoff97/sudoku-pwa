@@ -1,11 +1,19 @@
 .cell {
-    width: 50px;
-    height: 50px;
+    width: 10vw;
+    height: 10vw;
     border: 1px solid black;
     margin: 0px;
     padding: 0px;
-    font-size: 42px;
     text-align: center;
+    font-size: 8vw;
+}
+
+@media screen and (min-width: 500px) {
+    .cell {
+        width: 50px;
+        height: 50px;
+        font-size: 42px;
+    }
 }
 
 .wrong {
@@ -20,19 +28,19 @@ table {
     border-collapse: collapse;
 }
 
-tr:nth-child(3n) {
+tr.sudokuRow:nth-child(3n) {
     border-bottom: 2px solid black;
 }
 
-tr:nth-child(3n+1) {
+tr.sudokuRow:nth-child(3n+1) {
     border-top: 2px solid black;
 }
 
-td:nth-child(3n) {
+td.cell:nth-child(3n) {
     border-right: 2px solid black;
 }
 
-td:nth-child(3n+1) {
+td.cell:nth-child(3n+1) {
     border-left: 2px solid black;
 }
 
@@ -47,5 +55,5 @@ div.sudoku {
 }
 
 span.note {
-    font-size: 12px;
+    font-size: 15px;
 }
