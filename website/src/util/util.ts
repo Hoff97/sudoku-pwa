@@ -1,7 +1,13 @@
 import { Sudoku } from "./types";
 
 export function displaySecs(time: number): string {
-    return `${Math.floor(time/60)}:${time % 60}`;
+    let secs = time % 60;
+    let s = '';
+    if (secs < 10) {
+        s += '0';
+    }
+    s += secs;
+    return `${Math.floor(time/60)}:${s}`;
 }
 
 export function sudokuPercentage(sudoku: Sudoku): string {
