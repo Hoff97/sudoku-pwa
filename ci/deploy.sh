@@ -1,2 +1,2 @@
-cd ../website/
+cd ./website/
 npm run deploy
