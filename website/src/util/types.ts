@@ -11,3 +11,9 @@ export interface SudokuHelper {
     generate_sudoku(): string;
     solve_sudoku(s: string): string;
 }
+
+export interface Sudoku {
+    id: number;
+    cells: Cell[][];
+    time: number;
+};

@@ -1,37 +1,72 @@
 import * as React from 'react';
 import "./style.css";
 import { generateSudoku } from '../../util/generator';
-import { saveSudoku, getSudokus } from '../../util/save';
-import { useHistory } from 'react-router-dom';
+import { getSudokus, deleteSudoku, newSudoku } from '../../util/save';
+import { Sudoku } from '../../util/types';
+import { Route } from 'react-router-dom';
 
-export function Home() {
-    const history = useHistory();
+import del from './delete.png';
+import { displaySecs, sudokuPercentage } from '../../util/util';
 
-    function newSudoku() {
+interface HomeState {
+    sudokus: Sudoku[];
+}
+
+export class Home extends React.Component<{}, HomeState> {
+    constructor(props: any, context: any) {
+        super(props, context);
+
+        this.state = {
+            sudokus: []
+        };
+    }
+
+    componentDidMount(){
+        this.setState({
+            sudokus: getSudokus()
+        });
+    }
+
+    newSudoku(history: any) {
         const cells = generateSudoku();
-        const id = saveSudoku(cells);
+        const id = newSudoku(cells);
 
         history.push(`/sudoku/${id}`)
     }
 
-    function toSudoku(id: number) {
+    toSudoku(id: number, history: any) {
         history.push(`/sudoku/${id}`)
     }
 
-    const sudokus = getSudokus();
+    deleteSudoku(id: number) {
+        const sudokus = deleteSudoku(id);
+        this.setState({
+            sudokus
+        });
+    }
 
-    return <div className="home">
-            <table>
-                <tbody>
-                    <tr className="sudoku">
-                        <td className="sudoku" onClick={() => newSudoku()}>New sudoku</td>
-                    </tr>
-                    {sudokus.map(sudoku => {
-                        return <tr className="sudoku" key={sudoku.id}>
-                            <td className="sudoku" onClick={() => toSudoku(sudoku.id)}></td>
+    render() {
+        return <Route render={({ history}) => (
+            <div className="home">
+                <table>
+                    <tbody>
+                        <tr className="sudoku">
+                            <td className="sudoku" onClick={() => this.newSudoku(history)}>New sudoku</td>
                         </tr>
-                    })}
-                </tbody>
-            </table>
-        </div>;
+                        {this.state.sudokus.map(sudoku => {
+                            return <tr className="sudoku" key={sudoku.id}>
+                                <td className="sudoku">
+                                    <span onClick={() => this.toSudoku(sudoku.id, history)}>
+                                        {displaySecs(sudoku.time)} - {sudokuPercentage(sudoku)}
+                                    </span>
+                                    <img src={del} className="delete"
+                                        onClick={() => this.deleteSudoku(sudoku.id)}/>
+                                </td>
+                            </tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        )} />;
+    }
 }

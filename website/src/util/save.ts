@@ -1,4 +1,4 @@
-import { Cell } from "./types";
+import { Cell, Sudoku } from "./types";
 
 export function fromString(str: string): Cell[][] {
     const cells: Cell[][] = [];
@@ -24,7 +24,6 @@ export function toString(cells: Cell[][]): string {
     let str = '';
 
     for (let i = 0; i < 9; i++) {
-        const row: Cell[] = [];
         for (let j = 0; j < 9; j++) {
             str += cells[i][j].value === undefined ? '.' : `${cells[i][j].value}`;
         }
@@ -34,11 +33,6 @@ export function toString(cells: Cell[][]): string {
 }
 
 const localStorageKey = 'sudokus';
-
-interface Sudoku {
-    id: number;
-    cells: Cell[][];
-};
 
 export function getSudokus(): Sudoku[] {
     const store = localStorage.getItem(localStorageKey);
@@ -63,28 +57,33 @@ function genId(sudokus: Sudoku[]) {
     }
 }
 
-export function saveSudoku(cells: Cell[][], id?: number): number {
+export function newSudoku(cells: Cell[][]): number {
     const sudokus = getSudokus();
 
     const sudoku = {
-        id: (id !== null && id !== undefined) ? id : genId(sudokus),
-        cells
+        id: genId(sudokus),
+        cells,
+        time: 0
     }
 
-    if (id || id === 0) {
-        for (let i = 0; i < sudokus.length; i++) {
-            if (sudokus[i].id == sudoku.id) {
-                sudokus[i] = sudoku;
-                break;
-            }
-        }
-    } else {
-        sudokus.push(sudoku);
-    }
+    sudokus.push(sudoku);
 
     saveSudokus(sudokus);
 
     return sudoku.id;
+}
+
+export function saveSudoku(sudoku: Sudoku) {
+    const sudokus = getSudokus();
+
+    for (let i = 0; i < sudokus.length; i++) {
+        if (sudokus[i].id == sudoku.id) {
+            sudokus[i] = sudoku;
+            break;
+        }
+    }
+
+    saveSudokus(sudokus);
 }
 
 export function getSudoku(id: number): Sudoku | undefined {
@@ -98,4 +97,19 @@ export function getSudoku(id: number): Sudoku | undefined {
     }
 
     return undefined;
+}
+
+export function deleteSudoku(id: number): Sudoku[] {
+    const sudokus = getSudokus();
+
+    for (let i = 0; i < sudokus.length; i++) {
+        if (sudokus[i].id == id) {
+            sudokus.splice(i, 1);
+            break;
+        }
+    }
+
+    saveSudokus(sudokus);
+
+    return sudokus;
 }

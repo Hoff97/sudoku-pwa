@@ -1,17 +1,19 @@
 import * as React from 'react';
 import "./style.css";
 import { NumPad } from "../numpad/numpad";
-import { Cell, CellValue } from '../../util/types';
+import { Cell, CellValue, Sudoku } from '../../util/types';
 import { generateSudoku } from '../../util/generator';
 import { getSudoku, saveSudoku } from '../../util/save';
+import { sudokuPercentage, displaySecs } from '../../util/util';
 
 interface SudokuState {
-    cells: Cell[][];
+    sudoku: Sudoku;
     focus: number[];
-    id?: number;
 }
 
-export class Sudoku extends React.Component<{}, SudokuState> {
+export class SudokuComponent extends React.Component<{}, SudokuState> {
+    interval?: any;
+
     constructor(props: any, context: any) {
         super(props, context);
 
@@ -30,7 +32,11 @@ export class Sudoku extends React.Component<{}, SudokuState> {
         }
 
         this.state = {
-            cells: cells,
+            sudoku: {
+                cells: cells,
+                id: -1,
+                time: 0
+            },
             focus: [-1,-1]
         };
     }
@@ -38,7 +44,11 @@ export class Sudoku extends React.Component<{}, SudokuState> {
     generateSudoku() {
         const cells = generateSudoku();
         this.setState({
-            cells
+            sudoku: {
+                cells: cells,
+                id: this.state.sudoku.id,
+                time: 0
+            }
         });
         setTimeout(() =>  this.saveSudoku(), 100);
     }
@@ -51,7 +61,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
     }
 
     setCell(x: number, y: number, value: CellValue) {
-        const cells = this.state.cells;
+        const cells = this.state.sudoku.cells;
         if (cells[x][y].editable) {
             cells[x][y].value = value;
 
@@ -60,7 +70,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
     }
 
     setNote(x: number, y: number, value: number) {
-        const cells = this.state.cells;
+        const cells = this.state.sudoku.cells;
 
         if (cells[x][y].editable) {
             const ix = cells[x][y].notes.indexOf(value);
@@ -72,20 +82,28 @@ export class Sudoku extends React.Component<{}, SudokuState> {
             }
 
             this.setState({
-                cells
+                ...this.state,
+                sudoku: {
+                    ...this.state.sudoku,
+                    cells
+                }
             });
             this.saveSudoku();
         }
     }
 
     deleteNotes(x: number, y: number) {
-        const cells = this.state.cells;
+        const cells = this.state.sudoku.cells;
 
         if (cells[x][y].editable) {
             cells[x][y].notes = [];
 
             this.setState({
-                cells
+                ...this.state,
+                sudoku: {
+                    ...this.state.sudoku,
+                    cells
+                }
             });
             this.saveSudoku();
         }
@@ -158,7 +176,11 @@ export class Sudoku extends React.Component<{}, SudokuState> {
         }
 
         this.setState({
-            ...this.state, cells
+            ...this.state,
+            sudoku: {
+                ...this.state.sudoku,
+                cells
+            }
         });
         this.saveSudoku();
     }
@@ -170,18 +192,34 @@ export class Sudoku extends React.Component<{}, SudokuState> {
 
         if (sudoku) {
             this.setState({
-                cells: sudoku.cells,
-                id: sudoku.id
+                sudoku: sudoku
             });
         }
 
         document.addEventListener("keypress", event => this.handleKeyPress(event), false);
         document.addEventListener("keydown", event => this.handleKeyPress(event), false);
+
+        this.interval = setInterval(() => this.increaseTime(), 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    increaseTime() {
+        this.setState({
+            ...this.state,
+            sudoku: {
+                ...this.state.sudoku,
+                time: this.state.sudoku.time + 1
+            }
+        });
+        this.saveSudoku();
     }
 
     saveSudoku() {
-        if (this.state.id !== null) {
-            saveSudoku(this.state.cells, this.state.id);
+        if (this.state.sudoku.id !== null) {
+            saveSudoku(this.state.sudoku);
         }
     }
 
@@ -221,7 +259,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
         return <div className="sudoku">
             <table>
                 <tbody>
-                    {this.state.cells.map((row, x) =>
+                    {this.state.sudoku.cells.map((row, x) =>
                         <tr className="sudoku-row" key={x}>
                             {row.map((cell, y) => this.renderCell(cell, x, y))}
                         </tr>
@@ -232,6 +270,9 @@ export class Sudoku extends React.Component<{}, SudokuState> {
             <NumPad
                 emitClick={value => this.setCell(xFocus, yFocus, value)}
                 emitNote={value => this.setNote(xFocus, yFocus, value)}/>
+            <span>
+                {displaySecs(this.state.sudoku.time)} - {sudokuPercentage(this.state.sudoku)}
+            </span>
         </div>;
     }
 

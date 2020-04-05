@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Sudoku } from './components/sudoku/sudoku';
+import { SudokuComponent } from './components/sudoku/sudoku';
 
 import {
   BrowserRouter as Router,
@@ -14,7 +14,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/sudoku/:sudokuId" component={Sudoku}>
+        <Route path="/sudoku/:sudokuId" component={SudokuComponent}>
         </Route>
         <Route path="/">
           <Home />

@@ -14,3 +14,7 @@ td.sudoku {
     font-size: 45px;
     cursor: pointer;
 }
+
+img.delete {
+    float: right;
+}
