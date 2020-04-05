@@ -1,6 +1,6 @@
 import * as React from 'react';
 import "./style.css";
-import { CellValue } from "../sudoku/sudoku";
+import { CellValue } from '../../util/types';
 
 const nums = [1,2,3,4,5,6,7,8,9,undefined];
 
@@ -15,9 +15,11 @@ export class NumPad extends React.Component<NumPadProps, {}> {
     render() {
         return <div>
             <table>
-                <tr>
-                    {nums.map(cell => this.renderButton(cell))}
-                </tr>
+                <tbody>
+                    <tr>
+                        {nums.map(cell => this.renderButton(cell))}
+                    </tr>
+                </tbody>
             </table>
         </div>;
     }
@@ -46,7 +48,8 @@ export class NumPad extends React.Component<NumPadProps, {}> {
                     onTouchEnd={() => this.handleButtonRelease(cell)}
                     onMouseDown={() => this.handleButtonPress(cell)}
                     onMouseUp={() => this.handleButtonRelease(cell)}
-                    onMouseLeave={() => this.handleButtonRelease(cell)}>
+                    onMouseLeave={() => this.handleButtonRelease(cell)}
+                    key={`${cell}`}>
                 {cell}
         </td>;
     }

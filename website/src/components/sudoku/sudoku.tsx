@@ -1,49 +1,17 @@
 import * as React from 'react';
 import "./style.css";
 import { NumPad } from "../numpad/numpad";
-
-export type CellValue = number | undefined;
-
-interface Cell {
-    value: CellValue;
-    wrong: boolean;
-    editable: boolean;
-    notes: number[];
-}
+import { Cell, CellValue } from '../../util/types';
+import { generateSudoku } from '../../util/generator';
+import { getSudoku, saveSudoku } from '../../util/save';
 
 interface SudokuState {
     cells: Cell[][];
     focus: number[];
-}
-
-interface SudokuHelper {
-    generate_sudoku(): string;
-    solve_sudoku(s: string): string;
-}
-
-function fromString(str: string): Cell[][] {
-    const cells: Cell[][] = [];
-    for (let i = 0; i < 9; i++) {
-        const row: Cell[] = [];
-        for (let j = 0; j < 9; j++) {
-            const val = str[i*9 + j];
-
-            row.push({
-                value: val === '.' ? undefined : parseInt(val),
-                wrong: false,
-                editable: val === '.',
-                notes: []
-            });
-        }
-        cells.push(row);
-    }
-
-    return cells;
+    id?: number;
 }
 
 export class Sudoku extends React.Component<{}, SudokuState> {
-    private sudokuHelper?: SudokuHelper;
-
     constructor(props: any, context: any) {
         super(props, context);
 
@@ -65,22 +33,14 @@ export class Sudoku extends React.Component<{}, SudokuState> {
             cells: cells,
             focus: [-1,-1]
         };
-
-        import("sudoku-generator").then(module => {
-            this.sudokuHelper = module;
-
-            this.generateSudoku();
-        });
     }
 
     generateSudoku() {
-        if (this.sudokuHelper) {
-            const sudoku = this.sudokuHelper.generate_sudoku();
-            const cells = fromString(sudoku);
-            this.setState({
-                cells
-            });
-        }
+        const cells = generateSudoku();
+        this.setState({
+            cells
+        });
+        setTimeout(() =>  this.saveSudoku(), 100);
     }
 
     focus(x: number, y: number) {
@@ -114,6 +74,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
             this.setState({
                 cells
             });
+            this.saveSudoku();
         }
     }
 
@@ -126,6 +87,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
             this.setState({
                 cells
             });
+            this.saveSudoku();
         }
     }
 
@@ -198,11 +160,29 @@ export class Sudoku extends React.Component<{}, SudokuState> {
         this.setState({
             ...this.state, cells
         });
+        this.saveSudoku();
     }
 
     componentDidMount(){
+        const sudokuId = (this.props as any).match.params.sudokuId;
+
+        const sudoku = getSudoku(sudokuId);
+
+        if (sudoku) {
+            this.setState({
+                cells: sudoku.cells,
+                id: sudoku.id
+            });
+        }
+
         document.addEventListener("keypress", event => this.handleKeyPress(event), false);
         document.addEventListener("keydown", event => this.handleKeyPress(event), false);
+    }
+
+    saveSudoku() {
+        if (this.state.id !== null) {
+            saveSudoku(this.state.cells, this.state.id);
+        }
     }
 
     handleKeyPress(event: KeyboardEvent) {
@@ -240,11 +220,13 @@ export class Sudoku extends React.Component<{}, SudokuState> {
 
         return <div className="sudoku">
             <table>
-                {this.state.cells.map((row, x) =>
-                    <tr className="sudoku-row">
-                        {row.map((cell, y) => this.renderCell(cell, x, y))}
-                    </tr>
-                )}
+                <tbody>
+                    {this.state.cells.map((row, x) =>
+                        <tr className="sudoku-row" key={x}>
+                            {row.map((cell, y) => this.renderCell(cell, x, y))}
+                        </tr>
+                    )}
+                </tbody>
             </table>
             <button onClick={() => this.generateSudoku()}>Generate new sudoku</button>
             <NumPad
@@ -258,7 +240,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
 
         const focused = xFocus === x && yFocus === y ? 'focus' : '';
         const wrong = cell.wrong ? 'wrong' : '';
-        const set = !cell.wrong && cell.editable ? 'set' : '';
+        const set = cell.editable ? 'set' : '';
         const classes = `cell ${focused} ${wrong} ${set}`
 
         let content;
@@ -270,7 +252,8 @@ export class Sudoku extends React.Component<{}, SudokuState> {
 
         return <td className={classes}
             onClick={() => this.focus(x,y)}
-            onKeyPress={event => this.handleKeyPress(event.nativeEvent)}>
+            onKeyPress={event => this.handleKeyPress(event.nativeEvent)}
+            key={`${x}-${y}`}>
                 {content}
         </td>;
     }

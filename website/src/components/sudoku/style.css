@@ -20,8 +20,12 @@
     color: #D00;
 }
 
-.set {
+.set:not(.wrong) {
     color: #00A;
+}
+
+.wrong:not(.set) {
+    background-color: #CCC;
 }
 
 table {
