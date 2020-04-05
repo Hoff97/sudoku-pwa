@@ -17,4 +17,10 @@ td.sudoku {
 
 img.delete {
     float: right;
+    position: relative;
+    top: 5px;
+}
+
+div.actions {
+    float: right;
 }

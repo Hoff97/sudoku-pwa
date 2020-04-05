@@ -1,7 +1,7 @@
 import * as React from 'react';
 import "./style.css";
 import { generateSudoku } from '../../util/generator';
-import { getSudokus, deleteSudoku, newSudoku } from '../../util/save';
+import { getSudokus, deleteSudoku, newSudoku, copySudoku } from '../../util/save';
 import { Sudoku } from '../../util/types';
 import { Route } from 'react-router-dom';
 
@@ -45,6 +45,13 @@ export class Home extends React.Component<{}, HomeState> {
         });
     }
 
+    copySudoku(id: number) {
+        const sudokus = copySudoku(id);
+        this.setState({
+            sudokus
+        });
+    }
+
     render() {
         return <Route render={({ history}) => (
             <div className="home">
@@ -59,8 +66,13 @@ export class Home extends React.Component<{}, HomeState> {
                                     <span onClick={() => this.toSudoku(sudoku.id, history)}>
                                         {displaySecs(sudoku.time)} - {sudokuPercentage(sudoku)}
                                     </span>
-                                    <img src={del} className="delete"
-                                        onClick={() => this.deleteSudoku(sudoku.id)}/>
+                                    <div className="actions">
+                                        <span className="copy"
+                                            onClick={() => this.copySudoku(sudoku.id)}>&#x1f4cb;</span>
+                                        <img src={del} className="delete" alt="Delete sudoku"
+                                            onClick={() => this.deleteSudoku(sudoku.id)}
+                                            width="50px"/>
+                                    </div>
                                 </td>
                             </tr>
                         })}

@@ -113,3 +113,23 @@ export function deleteSudoku(id: number): Sudoku[] {
 
     return sudokus;
 }
+
+export function copySudoku(id: number): Sudoku[] {
+    const sudokus = getSudokus();
+
+    for (let i = 0; i < sudokus.length; i++) {
+        if (sudokus[i].id == id) {
+            const copy = {
+                id: genId(sudokus),
+                cells: sudokus[i].cells,
+                time: sudokus[i].time
+            };
+            sudokus.push(copy);
+            break;
+        }
+    }
+
+    saveSudokus(sudokus);
+
+    return getSudokus();
+}
