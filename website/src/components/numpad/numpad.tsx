@@ -12,10 +12,6 @@ interface NumPadProps {
 export class NumPad extends React.Component<NumPadProps, {}> {
     private buttonPressTimer?: any;
 
-    constructor(props: any, context: any) {
-        super(props, context);
-    }
-
     render() {
         return <div>
             <table>

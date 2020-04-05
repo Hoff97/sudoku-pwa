@@ -104,7 +104,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
 
         if (cells[x][y].editable) {
             const ix = cells[x][y].notes.indexOf(value);
-            if (ix != -1) {
+            if (ix !== -1) {
                 cells[x][y].notes.splice(ix, 1);
             } else {
                 cells[x][y].notes.push(value);
@@ -210,16 +210,16 @@ export class Sudoku extends React.Component<{}, SudokuState> {
 
         const parsed = parseInt(event.key);
 
-        if (xFocus != -1 && yFocus != -1) {
-            if (event.keyCode == 37) {
+        if (xFocus !== -1 && yFocus !== -1) {
+            if (event.keyCode === 37) {
                 this.focus(xFocus, yFocus - 1);
-            } else if (event.keyCode == 38) {
+            } else if (event.keyCode === 38) {
                 this.focus(xFocus - 1, yFocus);
-            } else if (event.keyCode == 39) {
+            } else if (event.keyCode === 39) {
                 this.focus(xFocus, yFocus + 1);
-            } else if (event.keyCode == 40) {
+            } else if (event.keyCode === 40) {
                 this.focus(xFocus + 1, yFocus);
-            } else if (parsed != NaN && parsed >= 1 && parsed <= 9) {
+            } else if (!isNaN(parsed) && parsed >= 1 && parsed <= 9) {
                 if (event.ctrlKey) {
                     this.setNote(xFocus, yFocus, parsed);
                 } else {
@@ -256,7 +256,7 @@ export class Sudoku extends React.Component<{}, SudokuState> {
     renderCell(cell: Cell, x: number, y: number) {
         let [xFocus, yFocus] = this.state.focus;
 
-        const focused = xFocus == x && yFocus == y ? 'focus' : '';
+        const focused = xFocus === x && yFocus === y ? 'focus' : '';
         const wrong = cell.wrong ? 'wrong' : '';
         const set = !cell.wrong && cell.editable ? 'set' : '';
         const classes = `cell ${focused} ${wrong} ${set}`
