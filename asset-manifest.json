@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/sudoku-pwa/static/css/main.1f9d1bbc.chunk.css",
-    "main.js": "/sudoku-pwa/static/js/main.f0151564.chunk.js",
-    "main.js.map": "/sudoku-pwa/static/js/main.f0151564.chunk.js.map",
+    "main.css": "/sudoku-pwa/static/css/main.48ed0da5.chunk.css",
+    "main.js": "/sudoku-pwa/static/js/main.ec97cb0d.chunk.js",
+    "main.js.map": "/sudoku-pwa/static/js/main.ec97cb0d.chunk.js.map",
     "runtime-main.js": "/sudoku-pwa/static/js/runtime-main.7da65629.js",
     "runtime-main.js.map": "/sudoku-pwa/static/js/runtime-main.7da65629.js.map",
     "static/js/2.887a1e49.chunk.js": "/sudoku-pwa/static/js/2.887a1e49.chunk.js",
@@ -11,15 +11,15 @@
     "0306c48d26f30627a82c.module.wasm": "/sudoku-pwa/0306c48d26f30627a82c.module.wasm",
     "static/js/3.c3936ce5.chunk.js.map": "/sudoku-pwa/static/js/3.c3936ce5.chunk.js.map",
     "index.html": "/sudoku-pwa/index.html",
-    "precache-manifest.4af9aaabbaa4f0f12ef1bdbc10dbcc68.js": "/sudoku-pwa/precache-manifest.4af9aaabbaa4f0f12ef1bdbc10dbcc68.js",
+    "precache-manifest.14f95cbff88f8fd40d7e336896367ad2.js": "/sudoku-pwa/precache-manifest.14f95cbff88f8fd40d7e336896367ad2.js",
     "service-worker.js": "/sudoku-pwa/service-worker.js",
-    "static/css/main.1f9d1bbc.chunk.css.map": "/sudoku-pwa/static/css/main.1f9d1bbc.chunk.css.map",
+    "static/css/main.48ed0da5.chunk.css.map": "/sudoku-pwa/static/css/main.48ed0da5.chunk.css.map",
     "static/js/2.887a1e49.chunk.js.LICENSE.txt": "/sudoku-pwa/static/js/2.887a1e49.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.7da65629.js",
     "static/js/2.887a1e49.chunk.js",
-    "static/css/main.1f9d1bbc.chunk.css",
-    "static/js/main.f0151564.chunk.js"
+    "static/css/main.48ed0da5.chunk.css",
+    "static/js/main.ec97cb0d.chunk.js"
   ]
 }
