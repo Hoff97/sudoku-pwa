@@ -9,10 +9,16 @@ tr.sudoku {
 }
 
 td.sudoku {
-    width: 450px;
     height: 100px;
     font-size: 45px;
     cursor: pointer;
+    width: 90vw;
+}
+
+@media screen and (min-width: 500px) {
+    td.sudoku {
+        width: 450px;
+    }
 }
 
 img.delete {
@@ -22,5 +28,18 @@ img.delete {
 }
 
 div.actions {
+    float: right;
+}
+
+span.easy {
+    float: left;
+}
+
+span.medium {
+    position: relative;
+    left: 10%;
+}
+
+span.hard {
     float: right;
 }

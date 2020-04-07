@@ -1,6 +1,6 @@
 import * as React from 'react';
 import "./style.css";
-import { generateSudoku } from '../../util/generator';
+import { generateSudoku, generateSudokuHardness, generateSudokuMissing, missEasy, missMedium, missHard } from '../../util/generator';
 import { getSudokus, deleteSudoku, newSudoku, copySudoku } from '../../util/save';
 import { Sudoku } from '../../util/types';
 import { Route } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { displaySecs, sudokuPercentage } from '../../util/util';
 
 interface HomeState {
     sudokus: Sudoku[];
+    choosing: boolean;
 }
 
 export class Home extends React.Component<{}, HomeState> {
@@ -17,7 +18,8 @@ export class Home extends React.Component<{}, HomeState> {
         super(props, context);
 
         this.state = {
-            sudokus: []
+            sudokus: [],
+            choosing: false
         };
     }
 
@@ -27,11 +29,18 @@ export class Home extends React.Component<{}, HomeState> {
         });
     }
 
-    newSudoku(history: any) {
-        const cells = generateSudoku();
+    newSudoku(history: any, hardness: number) {
+        let missing = hardness == 1 ? missEasy : hardness == 2 ? missMedium : missHard;
+        const cells = generateSudokuMissing(missing);
         const id = newSudoku(cells);
 
         history.push(`/sudoku/${id}`)
+    }
+
+    chooseHardness() {
+        this.setState({
+            choosing: true
+        });
     }
 
     toSudoku(id: number, history: any) {
@@ -53,13 +62,27 @@ export class Home extends React.Component<{}, HomeState> {
     }
 
     render() {
-        return <Route render={({ history}) => (
+        let newRow = (history: any) => <tr className="sudoku">
+                <td className="sudoku" onClick={() => this.chooseHardness()}>New sudoku</td>
+            </tr>;
+        if (this.state.choosing) {
+            newRow = (history: any) => <tr className="sudoku">
+                <td className="sudoku">
+                    <span onClick={() => this.newSudoku(history, 1)}
+                        className="easy">Easy</span>
+                    <span onClick={() => this.newSudoku(history, 2)}
+                        className="medium">Medium</span>
+                    <span onClick={() => this.newSudoku(history, 3)}
+                        className="hard">Hard</span>
+                </td>
+            </tr>;
+        }
+
+        return <Route render={({ history }) => (
             <div className="home">
                 <table>
                     <tbody>
-                        <tr className="sudoku">
-                            <td className="sudoku" onClick={() => this.newSudoku(history)}>New sudoku</td>
-                        </tr>
+                        {newRow(history)}
                         {this.state.sudokus.map(sudoku => {
                             return <tr className="sudoku" key={sudoku.id}>
                                 <td className="sudoku">
