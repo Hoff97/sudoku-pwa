@@ -18,4 +18,5 @@ export interface Sudoku {
     id: number;
     cells: Cell[][];
     time: number;
+    solved: boolean;
 };

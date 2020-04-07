@@ -63,7 +63,8 @@ export function newSudoku(cells: Cell[][]): number {
     const sudoku = {
         id: genId(sudokus),
         cells,
-        time: 0
+        time: 0,
+        solved: false
     }
 
     sudokus.push(sudoku);
@@ -122,7 +123,8 @@ export function copySudoku(id: number): Sudoku[] {
             const copy = {
                 id: genId(sudokus),
                 cells: sudokus[i].cells,
-                time: sudokus[i].time
+                time: sudokus[i].time,
+                solved: sudokus[i].solved
             };
             sudokus.push(copy);
             break;

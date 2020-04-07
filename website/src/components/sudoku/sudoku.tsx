@@ -4,7 +4,7 @@ import { NumPad } from "../numpad/numpad";
 import { Cell, CellValue, Sudoku } from '../../util/types';
 import { generateSudoku } from '../../util/generator';
 import { getSudoku, saveSudoku } from '../../util/save';
-import { sudokuPercentage, displaySecs } from '../../util/util';
+import { sudokuPercentage, displaySecs, countSet, countTotal } from '../../util/util';
 
 interface SudokuState {
     sudoku: Sudoku;
@@ -35,7 +35,8 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
             sudoku: {
                 cells: cells,
                 id: -1,
-                time: 0
+                time: 0,
+                solved: false
             },
             focus: [-1,-1]
         };
@@ -47,7 +48,8 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
             sudoku: {
                 cells: cells,
                 id: this.state.sudoku.id,
-                time: 0
+                time: 0,
+                solved: false
             }
         });
         setTimeout(() =>  this.saveSudoku(), 100);
@@ -115,6 +117,9 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
                 cells[i][j].wrong = false;
             }
         }
+
+        let wrong = false;
+
         for (let i = 0; i < 9; i++) {
             let row: CellValue[] = [];
             let col: CellValue[] = [];
@@ -126,12 +131,15 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
 
                 if (row.includes(cells[i][j].value)) {
                     cells[i][j].wrong = true;
+                    wrong = true;
                 }
                 if (col.includes(cells[j][i].value)) {
                     cells[j][i].wrong = true;
+                    wrong = true;
                 }
                 if (sq.includes(cells[x][y].value)) {
                     cells[x][y].wrong = true;
+                    wrong = true;
                 }
 
                 if (cells[i][j].value !== undefined) {
@@ -155,12 +163,15 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
 
                 if (row.includes(cells[i][j].value)) {
                     cells[i][j].wrong = true;
+                    wrong = true;
                 }
                 if (col.includes(cells[j][i].value)) {
                     cells[j][i].wrong = true;
+                    wrong = true;
                 }
                 if (sq.includes(cells[x][y].value)) {
                     cells[x][y].wrong = true;
+                    wrong = true;
                 }
 
                 if (cells[i][j].value !== undefined) {
@@ -182,6 +193,21 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
                 cells
             }
         });
+
+        setTimeout(() => {
+            if (!wrong && countSet(this.state.sudoku) === countTotal(this.state.sudoku)) {
+                this.setState({
+                    ...this.state,
+                    sudoku: {
+                        ...this.state.sudoku,
+                        solved: true
+                    }
+                });
+
+                this.saveSudoku();
+            }
+        });
+
         this.saveSudoku();
     }
 

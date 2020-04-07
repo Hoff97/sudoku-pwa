@@ -1,6 +1,6 @@
 import * as React from 'react';
 import "./style.css";
-import { generateSudoku, generateSudokuHardness, generateSudokuMissing, missEasy, missMedium, missHard } from '../../util/generator';
+import { generateSudokuMissing, missEasy, missMedium, missHard } from '../../util/generator';
 import { getSudokus, deleteSudoku, newSudoku, copySudoku } from '../../util/save';
 import { Sudoku } from '../../util/types';
 import { Route } from 'react-router-dom';
@@ -85,7 +85,7 @@ export class Home extends React.Component<{}, HomeState> {
                         {newRow(history)}
                         {this.state.sudokus.map(sudoku => {
                             return <tr className="sudoku" key={sudoku.id}>
-                                <td className="sudoku">
+                                <td className={"sudoku" + (sudoku.solved ? ' solved' : '')}>
                                     <span onClick={() => this.toSudoku(sudoku.id, history)}>
                                         {displaySecs(sudoku.time)} - {sudokuPercentage(sudoku)}
                                     </span>

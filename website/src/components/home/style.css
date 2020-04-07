@@ -8,6 +8,10 @@ tr.sudoku {
     border: 1px solid black;
 }
 
+td.solved {
+    background-color: #AFA;
+}
+
 td.sudoku {
     height: 100px;
     font-size: 45px;
