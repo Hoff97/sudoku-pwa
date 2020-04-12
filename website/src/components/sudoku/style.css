@@ -6,6 +6,7 @@
     padding: 0px;
     text-align: center;
     font-size: 8vw;
+    user-select: none;
 }
 
 @media screen and (min-width: 500px) {
