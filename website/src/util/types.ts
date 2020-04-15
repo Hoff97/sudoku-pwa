@@ -1,10 +1,15 @@
 export type CellValue = number | undefined;
 
+export interface Note {
+    value: number;
+    wrong: boolean;
+}
+
 export interface Cell {
     value: CellValue;
     wrong: boolean;
     editable: boolean;
-    notes: number[];
+    notes: Note[];
 }
 
 export interface SudokuHelper {

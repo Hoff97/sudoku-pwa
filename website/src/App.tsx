@@ -12,7 +12,7 @@ import { Home } from './components/home/home';
 
 function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Switch>
         <Route path="/sudoku/:sudokuId" component={SudokuComponent}>
         </Route>

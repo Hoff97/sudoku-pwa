@@ -61,3 +61,8 @@ div.sudoku {
 span.note {
     font-size: 15px;
 }
+
+span.note > span.wrong {
+    color: #D00;
+    background-color: rgba(255,255,255,0);
+}

@@ -75,21 +75,19 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
         const cells = this.state.sudoku.cells;
 
         if (cells[x][y].editable) {
-            const ix = cells[x][y].notes.indexOf(value);
+            const ix = cells[x][y].notes.findIndex(x => x.value === value);
             if (ix !== -1) {
                 cells[x][y].notes.splice(ix, 1);
             } else {
-                cells[x][y].notes.push(value);
-                cells[x][y].notes = cells[x][y].notes.sort();
+                cells[x][y].notes.push({
+                    value: value,
+                    wrong: false
+                });
+                cells[x][y].notes = cells[x][y].notes.sort((a,b) => a.value < b.value ? -1 : 0);
             }
 
-            this.setState({
-                ...this.state,
-                sudoku: {
-                    ...this.state.sudoku,
-                    cells
-                }
-            });
+            this.check(cells);
+
             this.saveSudoku();
         }
     }
@@ -115,6 +113,9 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
                 cells[i][j].wrong = false;
+                for (let k = 0; k < cells[i][j].notes.length; k++) {
+                    cells[i][j].notes[k].wrong = false;
+                }
             }
         }
 
@@ -140,6 +141,21 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
                 if (sq.includes(cells[x][y].value)) {
                     cells[x][y].wrong = true;
                     wrong = true;
+                }
+
+                for (let k = 0; k < 9; k++) {
+                    if (cells[i][j].notes[k] && row.includes(cells[i][j].notes[k].value)) {
+                        cells[i][j].notes[k].wrong = true;
+                        wrong = true;
+                    }
+                    if (cells[j][i].notes[k] && col.includes(cells[j][i].value)) {
+                        cells[j][i].wrong = true;
+                        wrong = true;
+                    }
+                    if (cells[x][y].notes[k] && sq.includes(cells[x][y].value)) {
+                        cells[x][y].wrong = true;
+                        wrong = true;
+                    }
                 }
 
                 if (cells[i][j].value !== undefined) {
@@ -172,6 +188,21 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
                 if (sq.includes(cells[x][y].value)) {
                     cells[x][y].wrong = true;
                     wrong = true;
+                }
+
+                for (let k = 0; k < 9; k++) {
+                    if (cells[i][j].notes[k] && row.includes(cells[i][j].notes[k].value)) {
+                        cells[i][j].notes[k].wrong = true;
+                        wrong = true;
+                    }
+                    if (cells[j][i].notes[k] && col.includes(cells[j][i].value)) {
+                        cells[j][i].wrong = true;
+                        wrong = true;
+                    }
+                    if (cells[x][y].notes[k] && sq.includes(cells[x][y].value)) {
+                        cells[x][y].wrong = true;
+                        wrong = true;
+                    }
                 }
 
                 if (cells[i][j].value !== undefined) {
@@ -282,6 +313,15 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
     render() {
         let [xFocus, yFocus] = this.state.focus;
 
+        let newButton;
+        if (countSet(this.state.sudoku) === 0) {
+            newButton = (
+                <button onClick={() => this.generateSudoku()}>
+                    Generate new sudoku
+                </button>
+            );
+        }
+
         return <div className="sudoku">
             <table>
                 <tbody>
@@ -292,7 +332,7 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
                     )}
                 </tbody>
             </table>
-            <button onClick={() => this.generateSudoku()}>Generate new sudoku</button>
+            {newButton}
             <NumPad
                 emitClick={value => this.setCell(xFocus, yFocus, value)}
                 emitNote={value => this.setNote(xFocus, yFocus, value)}/>
@@ -314,7 +354,9 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
         if (cell.value) {
             content = cell.value;
         } else {
-            content = <span className="note">{cell.notes.join('')}</span>
+            content = <span className="note">{cell.notes.map(note =>
+                <span className={note.wrong ? 'wrong' : ''}>{note.value}</span>
+            )}</span>;
         }
 
         return <td className={classes}
