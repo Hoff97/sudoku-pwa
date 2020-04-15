@@ -148,12 +148,12 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
                         cells[i][j].notes[k].wrong = true;
                         wrong = true;
                     }
-                    if (cells[j][i].notes[k] && col.includes(cells[j][i].value)) {
-                        cells[j][i].wrong = true;
+                    if (cells[j][i].notes[k] && col.includes(cells[j][i].notes[k].value)) {
+                        cells[j][i].notes[k].wrong = true;
                         wrong = true;
                     }
-                    if (cells[x][y].notes[k] && sq.includes(cells[x][y].value)) {
-                        cells[x][y].wrong = true;
+                    if (cells[x][y].notes[k] && sq.includes(cells[x][y].notes[k].value)) {
+                        cells[x][y].notes[k].wrong = true;
                         wrong = true;
                     }
                 }
@@ -195,12 +195,12 @@ export class SudokuComponent extends React.Component<{}, SudokuState> {
                         cells[i][j].notes[k].wrong = true;
                         wrong = true;
                     }
-                    if (cells[j][i].notes[k] && col.includes(cells[j][i].value)) {
-                        cells[j][i].wrong = true;
+                    if (cells[j][i].notes[k] && col.includes(cells[j][i].notes[k].value)) {
+                        cells[j][i].notes[k].wrong = true;
                         wrong = true;
                     }
-                    if (cells[x][y].notes[k] && sq.includes(cells[x][y].value)) {
-                        cells[x][y].wrong = true;
+                    if (cells[x][y].notes[k] && sq.includes(cells[x][y].notes[k].value)) {
+                        cells[x][y].notes[k].wrong = true;
                         wrong = true;
                     }
                 }
